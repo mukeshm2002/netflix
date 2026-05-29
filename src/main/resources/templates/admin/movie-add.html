@@ -112,9 +112,9 @@
         submitBtn.disabled = true;
         cancelBtn.classList.add('disabled');
         submitBtn.innerText = "Uploading... Please wait";
-        progressBar.style.backgroundColor = '#E50914'; // ரீசெட் பண்றோம் (ரெட் கலர்)
+        progressBar.style.backgroundColor = '#E50914'; // ரீசெட் ரெட் கலர்
 
-        // ⏳ அப்லோடு அளவைக் கணக்கிடுதல் (பிரௌசரில் இருந்து ரெண்டர் சர்வருக்கு)
+        // ⏳ அப்லோடு அளவைக் கணக்கிடுதல்
         xhr.upload.addEventListener('progress', function(event) {
             if (event.lengthComputable) {
                 const percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -133,29 +133,30 @@
             }
         });
 
-        // 🌟 புதுப்பிப்பு: சர்வர் ரெஸ்பான்ஸை முழுமையாக அலசும் 'onreadystatechange' லாஜிக்
+        // 🌟 அப்டேட்: அசல் சர்வர் பிழையை அப்படியே அலர்ட் பாப்-அப் ஆகக் காட்டும் லாஜிக்
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
-
-                // சர்வர் வெற்றிகரமாக ரெஸ்பான்ஸ் கொடுத்தால் (Status 200 ஓகே)
                 if (xhr.status >= 200 && xhr.status < 300) {
 
-                    // ஒருவேளை சர்வர் அப்லோடை முடிச்சுட்டு, உள்ளே Thymeleaf தப்புன்னு 'alert-danger' பக்கத்தை திருப்பி அனுப்பியிருந்தா
+                    // சக்ஸஸ் ரெஸ்பான்ஸ் வந்தாலும் உள்ளே Thymeleaf எர்ரர் மெசேஜ் ஏதும் ஒளிந்திருக்கிறதா என்று பார்க்கிறோம்
                     if (xhr.responseText.includes("alert-danger") || xhr.responseText.includes("Cloudinary Upload Failed")) {
-                        uploadStatus.innerText = "Cloudinary Upload Failed! Check your Cloudinary Credentials in Render Env Variables.";
-                        progressBar.style.backgroundColor = '#ff0000'; // பார் ரெட் கலராக மாறும்
+                        alert("Thymeleaf Form Error Detected! Check inputs.");
+                        uploadStatus.innerText = "Cloudinary Upload Failed! Check credentials.";
+                        progressBar.style.backgroundColor = '#ff0000';
                         submitBtn.disabled = false;
                         cancelBtn.classList.remove('disabled');
                         submitBtn.innerText = "Upload to Cloudinary & Save";
                     } else {
-                        // எல்லாமே சக்ஸஸ்னா மூவி லிஸ்ட் பக்கத்துக்கு ரீடைரெக்ட் பண்ணிடும்
+                        // எல்லாம் பக்காவா முடிந்தால் ரீடைரெக்ட்
                         uploadStatus.innerText = "Success! Redirecting...";
                         window.location.href = "/admin/movies?success=Movie+Added+Successfully";
                     }
 
                 } else {
-                    // Render ஃப்ரீ சர்வர் டைம்-அவுட் (30+ செகண்ட்ஸ்) ஆனாலோ அல்லது பேக்எண்டில் 500 பிழை வந்தாலோ
-                    uploadStatus.innerText = "Server Timeout / Error! Cloudinary took too long. Try a very small video clip (1-2 MB) first.";
+                    // 🚨 500 அல்லது மற்ற எர்ரர்கள் வந்தால் சர்வர் அனுப்பிய உண்மையான டெக்ஸ்ட்டை அலர்ட்டில் காட்டுகிறோம்!
+                    alert("Real Server Error (Status " + xhr.status + "):\n\n" + xhr.responseText.substring(0, 400));
+
+                    uploadStatus.innerText = "Check the popup error message details!";
                     progressBar.style.backgroundColor = '#ff0000';
                     submitBtn.disabled = false;
                     cancelBtn.classList.remove('disabled');
