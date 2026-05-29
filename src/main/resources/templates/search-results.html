@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Clone - Search Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background-color: #141414;
+            color: #fff;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            padding-top: 100px; /* Navbar-க்காக டாப் ஸ்பேசிங் */
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #141414;
+        }
+        .navbar-brand {
+            color: #E50914 !important;
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+        .nav-link {
+            color: #e5e5e5 !important;
+            font-size: 0.9rem;
+        }
+
+        /* Search Grid System */
+        .search-container {
+            padding: 0 4%;
+        }
+        .search-heading {
+            font-size: 1.5rem;
+            color: #808080;
+            margin-bottom: 30px;
+        }
+        .search-heading span {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            row-gap: 40px;
+        }
+
+        .movie-card {
+            height: 135px;
+            background-color: #181818;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .movie-card:hover {
+            transform: scale(1.08);
+            z-index: 5;
+        }
+        .movie-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .movie-card-overlay {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .movie-card:hover .movie-card-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top px-4">
+    <a class="navbar-brand" href="/home">NETFLIX</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
+            <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">TV Shows</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Movies</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">My List</a></li>
+        </ul>
+        <form th:action="@{/search}" method="GET" class="d-flex align-items-center me-3">
+            <div class="input-group">
+                <input type="text" name="query" th:value="${query}" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Search again...">
+                <button class="btn btn-sm btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
+</nav>
+
+<div class="container-fluid search-container">
+    <h2 class="search-heading">Explore titles related to: <span th:text="${query}">Query</span></h2>
+
+    <div th:if="${#lists.isEmpty(searchResults)}" class="text-center text-muted my-5 py-5">
+        <i class="bi bi-exclamation-circle fs-1 mb-3 d-block"></i>
+        <p class="fs-5">Your search for "<span th:text="${query}"></span>" did not have any matches.</p>
+        <p class="small">Suggestions: Try a different keyword or look for genre categories.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(searchResults)}" class="results-grid">
+        <div th:each="movie : ${searchResults}" class="movie-card">
+            <img th:src="${movie.thumbnailUrl}" alt="Movie Thumbnail">
+
+            <div class="movie-card-overlay">
+                <small class="fw-bold text-truncate" style="max-width: 150px;" th:text="${movie.title}">Title</small>
+                <a th:href="@{/watch/{id}(id=${movie.id})}" class="btn btn-sm btn-light rounded-circle p-1 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                    <i class="bi bi-play-fill text-dark fs-5"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

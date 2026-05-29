@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Netflix Admin - Add Movie</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #141414; color: #fff; }
+        .card { background-color: #181818; border: 1px solid #333; }
+        .form-control, .form-select { background-color: #333; color: #fff; border: 1px solid #555; }
+        .form-control:focus, .form-select:focus { background-color: #444; color: #fff; box-shadow: none; border-color: #E50914; }
+        .btn-netflix { background-color: #E50914; color: white; }
+        .btn-netflix:hover { background-color: #b80710; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4">
+                <h2 class="text-center mb-4" style="color: #E50914; font-weight: bold;">Add New Movie / Series</h2>
+
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                <form th:action="@{/admin/movies/add}" method="POST" enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <label class="form-label">Movie Title</label>
+                        <input type="text" name="title" class="form-control" required placeholder="Enter movie title">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3" required placeholder="Enter movie synopsis..."></textarea>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Category</label>
+                            <select name="categoryId" class="form-select" required>
+                                <option value="" disabled selected>Select Category</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end">
+                            <div class="form-check mb-2">
+                                <input type="checkbox" name="featured" class="form-check-input" id="featuredCheck" value="true">
+                                <label class="form-check-label" for="featuredCheck">Feature on Home Banner (Trending)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Thumbnail Image (Card Poster)</label>
+                        <input type="file" name="imageFile" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Hero Banner Image (Top Backdrop)</label>
+                        <input type="file" name="bannerFile" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Video File (MP4 Movie Stream)</label>
+                        <input type="file" name="videoFile" class="form-control" accept="video/*" required>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-netflix lg">Upload to Cloudinary & Save</button>
+                        <a th:href="@{/admin/movies}" class="btn btn-secondary">Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Netflix Admin - Movie List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #141414; color: #fff; }
+        .table { background-color: #181818; color: #fff; border-color: #333; }
+        .table th { background-color: #222; color: #E50914; border-bottom: 2px solid #333; }
+        .table td { vertical-align: middle; border-bottom: 1px solid #222; }
+        .img-thumbnail-custom { width: 80px; height: 50px; object-fit: cover; border-radius: 4px; }
+        .btn-netflix { background-color: #E50914; color: white; }
+        .btn-netflix:hover { background-color: #b80710; color: white; }
+        .badge-featured { background-color: #E50914; color: white; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><span style="color: #E50914; font-weight: bold;">Netflix</span> Admin Dashboard</h2>
+        <a th:href="@{/admin/movies/add}" class="btn btn-netflix">
+            <i class="bi bi-plus-circle-fill me-2"></i>Add New Movie
+        </a>
+    </div>
+
+    <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show bg-success text-white border-0" role="alert">
+        <span th:text="${param.success}"></span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${param.deleted}" class="alert alert-warning alert-dismissible fade show bg-warning text-dark border-0" role="alert">
+        <strong>Deleted!</strong> Movie removed successfully from database.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div th:each="cat : ${categories}" class="mb-5">
+        <h4 class="text-white border-bottom border-secondary pb-2 mb-3">
+            <i class="bi bi-collection-play me-2 text-secondary"></i>
+            <span th:text="${cat.name}">Category Name</span>
+        </h4>
+
+        <div th:if="${#lists.isEmpty(cat.movies)}" class="text-muted ps-4 mb-4">
+            <i class="bi bi-info-circle me-1"></i> No movies available in this category.
+        </div>
+
+        <table th:if="${not #lists.isEmpty(cat.movies)}" class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th style="width: 10%;">Poster</th>
+                <th style="width: 25%;">Title</th>
+                <th style="width: 40%;">Description</th>
+                <th style="width: 10%;">Status</th>
+                <th style="width: 15%;" class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="movie : ${cat.movies}">
+                <td>
+                    <img th:src="${movie.thumbnailUrl}" class="img-thumbnail-custom" alt="Poster">
+                </td>
+                <td>
+                    <strong th:text="${movie.title}">Movie Title</strong>
+                </td>
+                <td>
+                    <p class="text-truncate mb-0" style="max-width: 400px;" th:text="${movie.description}">Description...</p>
+                </td>
+                <td>
+                    <span th:if="${movie.featured}" class="badge badge-featured">Featured</span>
+                    <span th:unless="${movie.featured}" class="badge bg-secondary text-wrap">Standard</span>
+                </td>
+                <td class="text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                        <a th:href="@{/watch/{id}(id=${movie.id})}" class="btn btn-sm btn-outline-light" target="_blank" title="Preview Stream">
+                            <i class="bi bi-play-fill"></i>
+                        </a>
+                        <form th:action="@{/admin/movies/delete/{id}(id=${movie.id})}" method="POST"
+                              onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
