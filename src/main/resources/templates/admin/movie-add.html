@@ -112,8 +112,9 @@
         submitBtn.disabled = true;
         cancelBtn.classList.add('disabled');
         submitBtn.innerText = "Uploading... Please wait";
+        progressBar.style.backgroundColor = '#E50914'; // ரீசெட் பண்றோம் (ரெட் கலர்)
 
-        // ⏳ அப்லோடு அளவைக் கணக்கிடுதல்
+        // ⏳ அப்லோடு அளவைக் கணக்கிடுதல் (பிரௌசரில் இருந்து ரெண்டர் சர்வருக்கு)
         xhr.upload.addEventListener('progress', function(event) {
             if (event.lengthComputable) {
                 const percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -132,19 +133,36 @@
             }
         });
 
-        // சர்வர் ரெஸ்பான்ஸ் வந்தவுடன் செய்ய வேண்டியவை
-        xhr.addEventListener('load', function() {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                // அப்லோடு முடிந்து சர்வர் ரெஸ்பான்ஸ் 200 ஓகே வந்தால் லிஸ்ட் பக்கத்திற்குச் செல்லும்
-                window.location.href = "/admin/movies?success=Movie+Added+Successfully";
-            } else {
-                uploadStatus.innerText = "Upload failed. Server error or Invalid inputs.";
-                progressBar.style.backgroundColor = '#ff0000';
-                submitBtn.disabled = false;
-                cancelBtn.classList.remove('disabled');
-                submitBtn.innerText = "Upload to Cloudinary & Save";
+        // 🌟 புதுப்பிப்பு: சர்வர் ரெஸ்பான்ஸை முழுமையாக அலசும் 'onreadystatechange' லாஜிக்
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+
+                // சர்வர் வெற்றிகரமாக ரெஸ்பான்ஸ் கொடுத்தால் (Status 200 ஓகே)
+                if (xhr.status >= 200 && xhr.status < 300) {
+
+                    // ஒருவேளை சர்வர் அப்லோடை முடிச்சுட்டு, உள்ளே Thymeleaf தப்புன்னு 'alert-danger' பக்கத்தை திருப்பி அனுப்பியிருந்தா
+                    if (xhr.responseText.includes("alert-danger") || xhr.responseText.includes("Cloudinary Upload Failed")) {
+                        uploadStatus.innerText = "Cloudinary Upload Failed! Check your Cloudinary Credentials in Render Env Variables.";
+                        progressBar.style.backgroundColor = '#ff0000'; // பார் ரெட் கலராக மாறும்
+                        submitBtn.disabled = false;
+                        cancelBtn.classList.remove('disabled');
+                        submitBtn.innerText = "Upload to Cloudinary & Save";
+                    } else {
+                        // எல்லாமே சக்ஸஸ்னா மூவி லிஸ்ட் பக்கத்துக்கு ரீடைரெக்ட் பண்ணிடும்
+                        uploadStatus.innerText = "Success! Redirecting...";
+                        window.location.href = "/admin/movies?success=Movie+Added+Successfully";
+                    }
+
+                } else {
+                    // Render ஃப்ரீ சர்வர் டைம்-அவுட் (30+ செகண்ட்ஸ்) ஆனாலோ அல்லது பேக்எண்டில் 500 பிழை வந்தாலோ
+                    uploadStatus.innerText = "Server Timeout / Error! Cloudinary took too long. Try a very small video clip (1-2 MB) first.";
+                    progressBar.style.backgroundColor = '#ff0000';
+                    submitBtn.disabled = false;
+                    cancelBtn.classList.remove('disabled');
+                    submitBtn.innerText = "Upload to Cloudinary & Save";
+                }
             }
-        });
+        };
 
         // நெட்வொர்க் எர்ரர் ஏற்பட்டால்
         xhr.addEventListener('error', function() {
