@@ -11,11 +11,14 @@
         .form-control:focus, .form-select:focus { background-color: #444; color: #fff; box-shadow: none; border-color: #E50914; }
         .btn-netflix { background-color: #E50914; color: white; }
         .btn-netflix:hover { background-color: #b80710; color: white; }
+        /* ப்ரோகிரஸ் பாருக்கான அனிமேஷன் ஸ்டைல் */
+        .progress { background-color: #333; height: 25px; border-radius: 5px; }
+        .progress-bar { background-color: #E50914; font-weight: bold; transition: width 0.1s ease; }
     </style>
 </head>
 <body>
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card p-4">
@@ -23,7 +26,7 @@
 
                 <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-                <form th:action="@{/admin/movies/add}" method="POST" enctype="multipart/form-data">
+                <form id="movieForm" th:action="@{/admin/movies/add}" method="POST" enctype="multipart/form-data">
 
                     <div class="mb-3">
                         <label class="form-label">Movie Title</label>
@@ -66,9 +69,19 @@
                         <input type="file" name="videoFile" class="form-control" accept="video/*" required>
                     </div>
 
+                    <div id="progressContainer" class="mb-3" style="display: none;">
+                        <label class="form-label d-flex justify-content-between">
+                            <span id="uploadStatus">Uploading files to Cloudinary...</span>
+                            <span id="percentText">0%</span>
+                        </label>
+                        <div class="progress">
+                            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0%</div>
+                        </div>
+                    </div>
+
                     <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-netflix lg">Upload to Cloudinary & Save</button>
-                        <a th:href="@{/admin/movies}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" id="submitBtn" class="btn btn-netflix lg">Upload to Cloudinary & Save</button>
+                        <a th:href="@{/admin/movies}" id="cancelBtn" class="btn btn-secondary">Cancel</a>
                     </div>
 
                 </form>
@@ -78,5 +91,75 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.getElementById('movieForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // ஃபார்ம் சப்மிட் ஆகி பேஜ் ரீஃப்ரெஷ் ஆகுறத தடுக்குறோம்
+
+        const form = e.target;
+        const formData = new FormData(form);
+        const xhr = new XMLHttpRequest();
+
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const percentText = document.getElementById('percentText');
+        const submitBtn = document.getElementById('submitBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // அப்லோட் ஆரம்பிக்கும் போது UI-ஐ மாற்றுகிறோம்
+        progressContainer.style.display = 'block';
+        submitBtn.disabled = true;
+        cancelBtn.classList.add('disabled');
+        submitBtn.innerText = "Uploading... Please wait";
+
+        // ⏳ அப்லோடு அளவைக் கணக்கிடுதல்
+        xhr.upload.addEventListener('progress', function(event) {
+            if (event.lengthComputable) {
+                const percentComplete = Math.round((event.loaded / event.total) * 100);
+
+                // ப்ரோகிரஸ் பாரை அப்டேட் செய்கிறோம்
+                progressBar.style.width = percentComplete + '%';
+                progressBar.innerText = percentComplete + '%';
+                percentText.innerText = percentComplete + '%';
+
+                if (percentComplete === 100) {
+                    uploadStatus.innerText = "Files upload complete! Processing & Saving in Database...";
+                    progressBar.classList.remove('progress-bar-animated'); // அனிமேஷனை நிறுத்துகிறோம்
+                } else {
+                    uploadStatus.innerText = "Uploading movie components (" + percentComplete + "%)...";
+                }
+            }
+        });
+
+        // சர்வர் ரெஸ்பான்ஸ் வந்தவுடன் செய்ய வேண்டியவை
+        xhr.addEventListener('load', function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                // அப்லோடு முடிந்து சர்வர் ரெஸ்பான்ஸ் 200 ஓகே வந்தால் லிஸ்ட் பக்கத்திற்குச் செல்லும்
+                window.location.href = "/admin/movies?success=Movie+Added+Successfully";
+            } else {
+                uploadStatus.innerText = "Upload failed. Server error or Invalid inputs.";
+                progressBar.style.backgroundColor = '#ff0000';
+                submitBtn.disabled = false;
+                cancelBtn.classList.remove('disabled');
+                submitBtn.innerText = "Upload to Cloudinary & Save";
+            }
+        });
+
+        // நெட்வொர்க் எர்ரர் ஏற்பட்டால்
+        xhr.addEventListener('error', function() {
+            uploadStatus.innerText = "Network Error! Please check your connection.";
+            progressBar.style.backgroundColor = '#ff0000';
+            submitBtn.disabled = false;
+            cancelBtn.classList.remove('disabled');
+            submitBtn.innerText = "Upload to Cloudinary & Save";
+        });
+
+        // ரெண்டர் சர்வர் URL-க்கு டேட்டாவை அனுப்புகிறோம்
+        xhr.open('POST', form.action);
+        xhr.send(formData);
+    });
+</script>
+
 </body>
 </html>
