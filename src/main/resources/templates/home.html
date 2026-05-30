@@ -54,20 +54,18 @@
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: center; /* Default-ஆ எல்லாத்தையும் சென்டர் பண்ணுது */
+            justify-content: center; /* லேண்டிங் பேஜில் டெக்ஸ்டை நடுவில் வைக்கிறது */
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            /* 🌟 நெட்ஃபிளிக்ஸ் அசல் கொலாஜ் இமேஜ் + ஸ்டேபிள் லோக்கல் பேக்அப் இமேஜ் லிங்க் மாத்தியாச்சு */
-            background-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.9) 100%),
-                              url('https://assets.nflxext.com/ffe/siteui/vlv3/74d734ca-0e00-4db9-867e-ea210c2ab1d9/e81a4d40-52f5-41e9-a4e1-5d55efbf58ef/IN-en-20240527-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+            /* 🌟 அசல் நெட்ஃபிளிக்ஸ் கொலாஜ் இமேஜ் பேக்ரவுண்ட் (உங்க ரெண்டர் சர்வர் இமேஜ் பிளாக் செய்யாதவாறு மாற்று CDN லிங்க்) */
+            background-image: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.85) 100%),
+                              url('https://assets.nflxext.com/ffe/siteui/vlv3/511c54f9-ac2f-4258-b4aa-9af31da0bc1d/44054af6-6911-4775-9e6b-a82f6fa72e00/IN-en-20240618-popsignuptwoweeks-perspective_alpha_website_large.jpg');
             margin-bottom: 20px;
         }
 
         /* 🔥 அட்மின் பேனர் லோட் ஆகும்போது மட்டும் லெஃப்ட் அலைன்மென்ட்டுக்கு மாறும் */
         .billboard.has-movie {
-            background-size: cover;
-            background-position: center center;
             justify-content: flex-start !important;
             text-align: left !important;
         }
@@ -79,31 +77,44 @@
             z-index: 1;
         }
 
-        /* 🔥 அசல் Netflix Landing Text Style & Perfect Center Force */
+        /* 🔥 அசல் Netflix Landing Text Style & Center Force */
         .landing-content {
             position: relative;
             z-index: 2;
             max-width: 800px;
             padding: 20px;
             margin: 0 auto;
-            text-align: center; /* டெக்ஸ்ட்டை நடுவிலே கொண்டு வருகிறது */
+            text-align: center;
         }
         .landing-title {
-            font-size: 3.8rem;
+            font-size: 4rem;
             font-weight: 900;
             margin-bottom: 20px;
             line-height: 1.15;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.9);
         }
         .landing-subtitle {
             font-size: 1.6rem;
-            font-weight: 400;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            font-weight: 500;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
         }
-        .landing-desc {
-            font-size: 1.1rem;
-            color: #cccccc;
+
+        /* அசல் நெட்ஃபிளிக்ஸ் Finish Sign-Up பட்டன் ஸ்டைல் */
+        .btn-signup-landing {
+            background-color: #E50914;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: background-color 0.2s ease;
+        }
+        .btn-signup-landing:hover {
+            background-color: #c40812;
+            color: #fff;
         }
 
         /* டைனமிக் மூவி பேனர் கன்டென்ட் (அட்மின் செட் செய்யும் போது மட்டும்) */
@@ -146,7 +157,7 @@
             height: 50px;
         }
         .curve-container .shape-fill {
-            fill: #E50914; /* ஒரிஜினல் ரெட் கர்வ் */
+            fill: #E50914; /* ஒரிஜினல் நெட்ஃபிளிக்ஸ் ரெட் கர்வ் */
         }
 
         /* Netflix Movie Row Slider (வெர்டிகல் போஸ்டர் கார்ட்ஸ்) */
@@ -268,7 +279,7 @@
     <div class="landing-content" th:if="${heroBanner == null}">
         <h1 class="landing-title">Unlimited movies,<br>shows, and more</h1>
         <p class="landing-subtitle">Starts at ₹149. Cancel at any time.</p>
-        <p class="landing-desc fw-semibold text-warning">Ready to watch? Add and check "Feature on Home Banner" in Admin Panel to trigger Billboard Play mode.</p>
+        <button class="btn btn-signup-landing">Finish Sign-Up <i class="bi bi-chevron-right"></i></button>
     </div>
 
     <div class="curve-container">
