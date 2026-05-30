@@ -54,13 +54,13 @@
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: center; /* லேண்டிங் பேஜில் டெக்ஸ்டை நடுவில் வைக்கிறது */
+            justify-content: center;
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            /* 🌟 அசல் நெட்ஃபிளிக்ஸ் கொலாஜ் இமேஜ் பேக்ரவுண்ட் (உங்க ரெண்டர் சர்வர் இமேஜ் பிளாக் செய்யாதவாறு மாற்று CDN லிங்க்) */
-            background-image: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.85) 100%),
-                              url('https://assets.nflxext.com/ffe/siteui/vlv3/511c54f9-ac2f-4258-b4aa-9af31da0bc1d/44054af6-6911-4775-9e6b-a82f6fa72e00/IN-en-20240618-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+            /* 🌟 லோக்கல் இமேஜ் பாத் மாற்றப்பட்டுள்ளது - இதனால் 100% கொலாஜ் பேக்ரவுண்ட் ஒர்க் ஆகும் */
+            background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.8) 100%),
+                              url('/image/netflix-collage.png');
             margin-bottom: 20px;
         }
 
@@ -100,7 +100,7 @@
             text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
         }
 
-        /* அசல் நெட்ஃபிளிக்ஸ் Finish Sign-Up பட்டன் ஸ்டைல் */
+        /* അசல் நெட்ஃபிளிக்ஸ் Finish Sign-Up பட்டன் ஸ்டைல் */
         .btn-signup-landing {
             background-color: #E50914;
             color: #fff;
@@ -111,6 +111,8 @@
             border-radius: 4px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: background-color 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn-signup-landing:hover {
             background-color: #c40812;
@@ -157,10 +159,10 @@
             height: 50px;
         }
         .curve-container .shape-fill {
-            fill: #E50914; /* ஒரிஜினல் நெட்ஃபிளிக்ஸ் ரெட் கர்வ் */
+            fill: #E50914;
         }
 
-        /* Netflix Movie Row Slider (வெர்டிகல் போஸ்டர் கார்ட்ஸ்) */
+        /* Netflix Movie Row Slider */
         .movie-row {
             padding: 40px 4% 30px 4%;
             position: relative;
