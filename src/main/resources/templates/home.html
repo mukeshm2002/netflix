@@ -34,6 +34,7 @@
             font-weight: 900;
             font-size: 2rem;
             letter-spacing: 1px;
+            text-decoration: none;
         }
         .nav-link {
             color: #e5e5e5 !important;
@@ -46,27 +47,72 @@
             font-weight: 500;
         }
 
-        /* Hero Billboard Banner */
+        /* 🔥 Netflix Landing / Billboard Container */
         .billboard {
             position: relative;
-            height: 85vh;
-            background-size: cover;
-            background-position: center center;
+            height: 90vh;
+            width: 100%;
             display: flex;
             align-items: center;
+            justify-content: center; /* Default-ஆ எல்லாத்தையும் சென்டர் பண்ணுது */
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            /* 🌟 நெட்ஃபிளிக்ஸ் அசல் கொலாஜ் இமேஜ் + ஸ்டேபிள் லோக்கல் பேக்அப் இமேஜ் லிங்க் மாத்தியாச்சு */
+            background-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.9) 100%),
+                              url('https://assets.nflxext.com/ffe/siteui/vlv3/74d734ca-0e00-4db9-867e-ea210c2ab1d9/e81a4d40-52f5-41e9-a4e1-5d55efbf58ef/IN-en-20240527-popsignuptwoweeks-perspective_alpha_website_large.jpg');
             margin-bottom: 20px;
         }
+
+        /* 🔥 அட்மின் பேனர் லோட் ஆகும்போது மட்டும் லெஃப்ட் அலைன்மென்ட்டுக்கு மாறும் */
+        .billboard.has-movie {
+            background-size: cover;
+            background-position: center center;
+            justify-content: flex-start !important;
+            text-align: left !important;
+        }
+
         .billboard-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(74deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%),
-                        linear-gradient(to top, #141414 0%, rgba(20,20,20,0) 25%);
+            background: linear-gradient(to top, #141414 0%, rgba(20,20,20,0) 15%);
+            z-index: 1;
         }
+
+        /* 🔥 அசல் Netflix Landing Text Style & Perfect Center Force */
+        .landing-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 20px;
+            margin: 0 auto;
+            text-align: center; /* டெக்ஸ்ட்டை நடுவிலே கொண்டு வருகிறது */
+        }
+        .landing-title {
+            font-size: 3.8rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.15;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        .landing-subtitle {
+            font-size: 1.6rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+        .landing-desc {
+            font-size: 1.1rem;
+            color: #cccccc;
+        }
+
+        /* டைனமிக் மூவி பேனர் கன்டென்ட் (அட்மின் செட் செய்யும் போது மட்டும்) */
         .billboard-content {
             position: relative;
             z-index: 2;
             max-width: 45%;
             margin-left: 4%;
+            text-align: left;
         }
         .billboard-title {
             font-size: 3.8rem;
@@ -83,9 +129,29 @@
             line-height: 1.4;
         }
 
-        /* Netflix Movie Row Slider (🔥 வெர்டிகல் போஸ்டர் கார்ட்ஸ்) */
+        /* 🔥 Netflix மாஸ் ரெட் ஸ்மைலி கர்வ் லைன் (Red Curve Separator) */
+        .curve-container {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 5;
+        }
+        .curve-container svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 50px;
+        }
+        .curve-container .shape-fill {
+            fill: #E50914; /* ஒரிஜினல் ரெட் கர்வ் */
+        }
+
+        /* Netflix Movie Row Slider (வெர்டிகல் போஸ்டர் கார்ட்ஸ்) */
         .movie-row {
-            padding: 0 4% 30px 4%;
+            padding: 40px 4% 30px 4%;
             position: relative;
             z-index: 3;
         }
@@ -94,23 +160,18 @@
             font-weight: bold;
             color: #e5e5e5;
             margin-bottom: 12px;
-            transition: color 0.3s;
-        }
-        .row-title:hover {
-            color: #fff;
         }
         .movie-slider {
             display: flex;
             overflow-x: auto;
             gap: 12px;
             padding: 10px 0;
-            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            scrollbar-width: none;
         }
         .movie-slider::-webkit-scrollbar {
-            display: none; /* Hide scrollbar for Chrome/Safari */
+            display: none;
         }
 
-        /* 🔥 கார்டு சைஸ் வெர்டிகல் போஸ்டர் ஷேப்பிற்கு மாற்றப்பட்டுள்ளது */
         .movie-card {
             min-width: 180px;
             max-width: 180px;
@@ -149,26 +210,13 @@
             opacity: 1;
         }
 
-        /* Standard Buttons */
+        /* Buttons */
         .btn-play {
-            background-color: #fff;
-            color: #000;
-            font-weight: bold;
-            border: none;
-            padding: 10px 28px;
-            border-radius: 4px;
-            transition: background-color 0.2s ease;
+            background-color: #fff; color: #000; font-weight: bold; border: none; padding: 10px 28px; border-radius: 4px;
         }
         .btn-play:hover { background-color: #e6e6e6; color: #000; }
-
         .btn-info-custom {
-            background-color: rgba(109, 109, 110, 0.7);
-            color: #fff;
-            font-weight: bold;
-            border: none;
-            padding: 10px 28px;
-            border-radius: 4px;
-            transition: background-color 0.2s ease;
+            background-color: rgba(109, 109, 110, 0.7); color: #fff; font-weight: bold; border: none; padding: 10px 28px; border-radius: 4px;
         }
         .btn-info-custom:hover { background-color: rgba(109, 109, 110, 0.4); color: #fff; }
     </style>
@@ -195,8 +243,11 @@
     </div>
 </nav>
 
-<header class="billboard" th:style="'background-image: url(' + ${heroBanner != null ? heroBanner.bannerUrl : 'https://images.unsplash.com/photo-1574267431629-2e5709841c53'} + ');'">
+<header th:class="${heroBanner != null} ? 'billboard has-movie' : 'billboard'"
+        th:style="${heroBanner != null} ? 'background-image: linear-gradient(74deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%), linear-gradient(to top, #141414 0%, rgba(20,20,20,0) 25%), url(' + ${heroBanner.bannerUrl} + ');' : ''">
+
     <div class="billboard-overlay"></div>
+
     <div class="billboard-content" th:if="${heroBanner != null}">
         <h1 class="billboard-title" th:text="${heroBanner.title}">Featured Movie</h1>
         <p class="billboard-desc" th:text="${heroBanner.description}">Movie Description text placeholder goes here...</p>
@@ -205,7 +256,6 @@
             <a th:href="@{/watch/{id}(id=${heroBanner.id})}" class="btn btn-play d-flex align-items-center gap-2">
                 <i class="bi bi-play-fill fs-4"></i> Play
             </a>
-
             <form th:action="@{/watchlist/add}" method="POST" class="m-0">
                 <input type="hidden" name="movieId" th:value="${heroBanner.id}">
                 <button type="submit" class="btn btn-info-custom d-flex align-items-center gap-2">
@@ -215,9 +265,16 @@
         </div>
     </div>
 
-    <div class="billboard-content" th:if="${heroBanner == null}">
-        <h1 class="billboard-title">Welcome to Netflix</h1>
-        <p class="billboard-desc">Start adding and managing your movies using the admin panel to see your hero banner alive.</p>
+    <div class="landing-content" th:if="${heroBanner == null}">
+        <h1 class="landing-title">Unlimited movies,<br>shows, and more</h1>
+        <p class="landing-subtitle">Starts at ₹149. Cancel at any time.</p>
+        <p class="landing-desc fw-semibold text-warning">Ready to watch? Add and check "Feature on Home Banner" in Admin Panel to trigger Billboard Play mode.</p>
+    </div>
+
+    <div class="curve-container">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0 Q600,180 1200,0 L1200,120 L0,120 Z" class="shape-fill"></path>
+        </svg>
     </div>
 </header>
 
@@ -228,7 +285,6 @@
         <div class="movie-slider">
             <div th:each="movie : ${cat.movies}" class="movie-card">
                 <img th:src="${movie.thumbnailUrl}" alt="Movie Poster">
-
                 <div class="movie-card-overlay">
                     <small class="fw-bold text-truncate text-white" style="width: 100%;" th:text="${movie.title}">Title</small>
                     <div class="d-flex justify-content-between align-items-center mt-1">
